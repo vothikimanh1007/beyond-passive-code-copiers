@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Beyond Passive Code Copiers - Automated Student Auditing Evaluator
-Author: IT Faculty Research Group, Ton Duc Thang University (TDTU)
+Author: Vo Thi Kim Anh, Ton Duc Thang University (TDTU)
 Date: June 2026
 """
 
