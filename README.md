@@ -95,7 +95,7 @@ The web_demo/index.html file is a completely self-contained, serverless applicat
 If you use this pedagogical framework, code templates, or datasets in your educational research, please cite our paper:
 
 @inproceedings{ ,  
-author = {Faculty of Information Technology},  
+author = {No name},  
 title = {Beyond Passive Code Copiers: Embedding "AI Auditing" and Role-Play Simulations into Agile Software Engineering and Advanced Database Education},  
 booktitle = {...},  
 year = {2026},  
@@ -105,6 +105,6 @@ url = {...}>
 
 For inquiries regarding curriculum deployment, joint research collaboration, or dataset access, please contact:
 
-- **Faculty of Information Technology, Ton Duc Thang University (TDTU)**
-- **Email:** <vothikimanh@tdtu.edu.vn>
-- **Location:** Ho Chi Minh City, Vietnam.
+- **No name**
+- **Email:** No name
+- **Location:** No name
