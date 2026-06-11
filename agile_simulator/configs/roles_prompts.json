@@ -1,0 +1,26 @@
+{
+  "forklift_warehouse": {
+    "title": "Forklift Dynamic Positioning and Warehousing System",
+    "description": "A logistics coordination system that tracks IoT forklift positions in real-time, matching coordinates against multi-tiered inventory racks to optimize route schedules.",
+    "anomalies": [
+      {
+        "type": "Algorithmic Complexity",
+        "detail": "AI suggests executing continuous O(N^2) subqueries to compute closest coordinate vectors per forklift, locking the execution thread."
+      },
+      {
+        "type": "Concurrency Race Condition",
+        "detail": "Multiple forklifts attempting to reserve the exact same inventory rack slot simultaneously without proper FOR UPDATE row locks."
+      }
+    ]
+  },
+  "library_booking": {
+    "title": "Socio-Technical Autonomous Library System",
+    "description": "An automated booking, seat allocation, and book reservation system integrated with real-time study-space environmental controls.",
+    "anomalies": [
+      {
+        "type": "Database Trigger Mutation",
+        "detail": "AI trigger attempts to execute queries on the 'seat_allocation' table inside a row-level AFTER UPDATE event (Mutating Table Error ORA-04091)."
+      }
+    ]
+  }
+}
