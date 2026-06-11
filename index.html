@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socio-Technical Sandbox & AI Auditor - DI-IDEA 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header Navbar -->
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="p-2.5 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-950/40">
+                <i data-lucide="cpu" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight tracking-tight">Beyond Passive Code Copiers</h1>
+                <p class="text-xs text-slate-400">Interactive Research Dashboard & Sandbox — DI-IDEA 2026 Entry Companion</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <!-- User Guidelines Button -->
+            <button onclick="toggleModal('guide-modal')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 text-slate-300 transition-colors">
+                <i data-lucide="help-circle" class="w-4 h-4 text-indigo-400"></i>
+                User Guidelines
+            </button>
+            <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                Dataset N = 299 Verified
+            </span>
+            <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                AUN-TEPL Approved
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 flex flex-col lg:flex-row h-full">
+
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-64 border-r border-slate-800 bg-slate-950 p-5 space-y-4">
+            <div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Navigation Panels</p>
+                <nav class="space-y-1">
+                    <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all bg-indigo-600/10 text-indigo-400 border border-indigo-500/10">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                        <span>Empirical Overview</span>
+                    </button>
+                    <button onclick="switchTab('auditor')" id="btn-auditor" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-400 hover:bg-slate-900 hover:text-white">
+                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                        <span>AI Auditing Auditor</span>
+                    </button>
+                    <button onclick="switchTab('sprint')" id="btn-sprint" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-400 hover:bg-slate-900 hover:text-white">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        <span>Sprint Role Simulator</span>
+                    </button>
+                    <button onclick="switchTab('paradox')" id="btn-paradox" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-400 hover:bg-slate-900 hover:text-white">
+                        <i data-lucide="smartphone" class="w-4 h-4"></i>
+                        <span>Ergonomics Paradox</span>
+                    </button>
+                </nav>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4 space-y-4">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 mb-2">Sycophancy Modulator</p>
+                <div class="px-3 space-y-3">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-400">AI Trust Alignment</span>
+                        <span id="trust-percentage" class="font-bold text-indigo-400">59%</span>
+                    </div>
+                    <input type="range" min="10" max="95" value="59" oninput="updateTrustSlider(this.value)" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                    <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-1">
+                        <p class="font-bold text-[10px] text-indigo-400 uppercase tracking-wide flex items-center gap-1">
+                            <i data-lucide="info" class="w-3.5 h-3.5"></i> Sycophancy Alert
+                        </p>
+                        <p id="sycophancy-commentary" class="text-[10px] text-slate-400 leading-normal">
+                            Students easily spot direct flattery, but subtle stance-matching under professional guise is highly persuasive.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4">
+                <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-2">
+                    <p class="font-semibold text-slate-300">TDTU IT Faculty</p>
+                    <p class="text-slate-500 leading-relaxed text-[11px]">Empirical CS pedagogy designed to transform students from passive code consumers to system architects.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Dynamic Content Canvas -->
+        <main class="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar">
+
+            <!-- TAB 1: OVERVIEW -->
+            <section id="tab-overview" class="tab-content space-y-6 animate-fade-in">
+                <!-- Header Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex items-center justify-between shadow-lg shadow-slate-950/20">
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Mean Sprint Acceleration</p>
+                            <h3 class="text-3xl font-extrabold mt-1 text-indigo-400">3.83 / 5.0</h3>
+                            <p class="text-[10px] text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+                                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Agile Scrum Role-Play
+                            </p>
+                        </div>
+                        <div class="p-3 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/10">
+                            <i data-lucide="gauge" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex items-center justify-between shadow-lg shadow-slate-950/20">
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Autonomous Refactoring Rate</p>
+                            <h3 class="text-3xl font-extrabold mt-1 text-emerald-400">12.8%</h3>
+                            <p class="text-[10px] text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Active Code Auditing
+                            </p>
+                        </div>
+                        <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/10">
+                            <i data-lucide="file-check-2" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex items-center justify-between shadow-lg shadow-slate-950/20">
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">AI Anxiety Reduction Mean</p>
+                            <h3 class="text-3xl font-extrabold mt-1 text-amber-400">4.28 / 5.0</h3>
+                            <p class="text-[10px] text-amber-400 mt-1 flex items-center gap-1 font-medium">
+                                <i data-lucide="smile" class="w-3.5 h-3.5"></i> Affective Filter Mitigation
+                            </p>
+                        </div>
+                        <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/10">
+                            <i data-lucide="shield" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empirical Plots Row -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <!-- Dynamic Figure 1 -->
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="font-bold text-base flex items-center gap-2">
+                                <span class="text-xs px-2.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-400 font-mono">Fig. 1</span>
+                                Paradox of Reliance vs. Auditing Effort
+                            </h2>
+                            <i data-lucide="info" class="w-4 h-4 text-slate-500 cursor-help" title="Desirable Difficulties study"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            How did Advanced DB students react when presented with inefficient $O(N^2)$ SQL suggestions? Instead of automation bias, students opted for critical active generation.
+                        </p>
+                        
+                        <!-- Dynamic SVG Chart for Figure 1 -->
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-center">
+                            <svg class="w-full h-44" viewBox="0 0 400 160">
+                                <!-- Background grid -->
+                                <line x1="100" y1="20" x2="380" y2="20" stroke="#1e293b" stroke-dasharray="3"/>
+                                <line x1="100" y1="70" x2="380" y2="70" stroke="#1e293b" stroke-dasharray="3"/>
+                                <line x1="100" y1="120" x2="380" y2="120" stroke="#1e293b" stroke-dasharray="3"/>
+                                
+                                <!-- Data bars -->
+                                <rect x="100" y="20" width="327.2" height="15" rx="3" fill="#6366f1" />
+                                <text x="105" y="31" fill="#fff" font-size="9" font-family="monospace">81.8% Re-prompted AI</text>
+                                
+                                <rect x="100" y="70" width="51.2" height="15" rx="3" fill="#10b981" />
+                                <text x="105" y="81" fill="#fff" font-size="9" font-family="monospace">12.8% Refactored</text>
+                                
+                                <rect x="100" y="120" width="21.6" height="15" rx="3" fill="#f43f5e" />
+                                <text x="105" y="131" fill="#fff" font-size="9" font-family="monospace">5.4% Retained</text>
+                                
+                                <!-- Labels -->
+                                <text x="10" y="31" fill="#94a3b8" font-size="10">Re-prompt</text>
+                                <text x="10" y="81" fill="#94a3b8" font-size="10">Active Audit</text>
+                                <text x="10" y="131" fill="#94a3b8" font-size="10">Copy-Paste</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Figure 2 -->
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="font-bold text-base flex items-center gap-2">
+                                <span class="text-xs px-2.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-400 font-mono">Fig. 2</span>
+                                Structured Scrum Role-Play Performance
+                            </h2>
+                            <i data-lucide="info" class="w-4 h-4 text-slate-500 cursor-help" title="Scrum Acceleration vs Legacy teamwork models"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            A multi-dimensional evaluation showing percentage improvements in collaborative and professional process parameters under time-boxed Agile simulations.
+                        </p>
+                        
+                        <!-- Dynamic SVG Chart for Figure 2 -->
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-center">
+                            <svg class="w-full h-44" viewBox="0 0 400 160">
+                                <!-- Background lines -->
+                                <line x1="120" y1="20" x2="380" y2="20" stroke="#1e293b" />
+                                <line x1="120" y1="70" x2="380" y2="70" stroke="#1e293b" />
+                                <line x1="120" y1="120" x2="380" y2="120" stroke="#1e293b" />
+                                
+                                <!-- Data bars -->
+                                <rect x="120" y="15" width="228.6" height="15" rx="3" fill="#3b82f6" />
+                                <text x="355" y="27" fill="#60a5fa" font-size="10" font-family="monospace">76.2%</text>
+                                
+                                <rect x="120" y="65" width="214.2" height="15" rx="3" fill="#2563eb" />
+                                <text x="355" y="77" fill="#60a5fa" font-size="10" font-family="monospace">71.4%</text>
+                                
+                                <rect x="120" y="115" width="194.4" height="15" rx="3" fill="#1d4ed8" />
+                                <text x="355" y="127" fill="#60a5fa" font-size="10" font-family="monospace">64.8%</text>
+                                
+                                <!-- Labels -->
+                                <text x="10" y="27" fill="#94a3b8" font-size="10">Accountability</text>
+                                <text x="10" y="77" fill="#94a3b8" font-size="10">Communication</text>
+                                <text x="10" y="127" fill="#94a3b8" font-size="10">Crisis Control</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theory Matrix -->
+                <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <h2 class="font-bold text-base flex items-center gap-2">
+                        <i data-lucide="bookmark" class="w-5 h-5 text-indigo-400"></i>
+                        Four Pillars of the Unified Cognitive Scaffolding Framework
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                        <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Cognitive</span>
+                            <h4 class="font-semibold text-slate-200 text-sm">Active Generation</h4>
+                            <p class="text-xs text-slate-400">Bypasses copy-paste cognitive offloading using intentional bug-finding loops (Desirable Difficulties).</p>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Metacognitive</span>
+                            <h4 class="font-semibold text-slate-200 text-sm">Self-Efficacy Model</h4>
+                            <p class="text-xs text-slate-400">Fosters system design autonomy through Bandura's mastery experiences during code verification.</p>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Emotional</span>
+                            <h4 class="font-semibold text-slate-200 text-sm">Affective Filtering</h4>
+                            <p class="text-xs text-slate-400">Lowers evaluation anxiety by routing diagnostic feedback through a non-judgmental mobile interface.</p>
+                        </div>
+                        <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Process</span>
+                            <h4 class="font-semibold text-slate-200 text-sm">Distributed Scrum</h4>
+                            <p class="text-xs text-slate-400">Integrates empirical process control via role-play to avoid collaborative cognitive overloads.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- TAB 2: AI AUDITOR SANDBOX -->
+            <section id="tab-auditor" class="tab-content hidden space-y-6 animate-fade-in">
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                    <!-- Left: Control Panel -->
+                    <div class="xl:col-span-4 bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex items-center space-x-2 text-amber-500">
+                            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                            <h2 class="font-bold text-base">Select AI Hallucination</h2>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Simulate real, complex database anomalies identified in the survey classes. Students were forced to audit and optimize these templates.
+                        </p>
+                        <div class="space-y-2 pt-2">
+                            <button onclick="loadBug(1)" id="bug-btn-1" class="bug-btn w-full text-left p-3.5 rounded-xl border text-xs font-medium transition-all bg-indigo-600/10 border-indigo-500/20 text-indigo-400">
+                                1. Inefficient O(N²) Database Loop
+                            </button>
+                            <button onclick="loadBug(2)" id="bug-btn-2" class="bug-btn w-full text-left p-3.5 rounded-xl border text-xs font-medium transition-all bg-slate-900 border-slate-800 hover:bg-slate-900/60 text-slate-300">
+                                2. Oracle Mutating Table (ORA-04091)
+                            </button>
+                            <button onclick="loadBug(3)" id="bug-btn-3" class="bug-btn w-full text-left p-3.5 rounded-xl border text-xs font-medium transition-all bg-slate-900 border-slate-800 hover:bg-slate-900/60 text-slate-300">
+                                3. Concurrency Transaction Race Condition
+                            </button>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800/80">
+                            <button onclick="auditCode()" class="w-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center space-x-2 shadow-lg shadow-emerald-950/20">
+                                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                <span>Execute Active Audit</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: IDE and Outputs -->
+                    <div class="xl:col-span-8 flex flex-col space-y-4">
+                        <!-- Code comparison area -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                            <!-- Input (Hallucination) -->
+                            <div class="bg-slate-950 rounded-2xl border border-slate-800 flex flex-col h-[350px]">
+                                <div class="px-4 py-3 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
+                                    <span class="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        LLM Suggestion (Passive Output)
+                                    </span>
+                                    <span class="text-[10px] text-slate-500 font-mono">unsafe_code.sql</span>
+                                </div>
+                                <pre class="p-4 flex-1 font-mono text-xs text-slate-300 overflow-auto bg-slate-950/40 custom-scrollbar" id="code-dirty"></pre>
+                            </div>
+                            <!-- Output (Audited) -->
+                            <div class="bg-slate-950 rounded-2xl border border-slate-800 flex flex-col h-[350px] relative">
+                                <div class="px-4 py-3 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
+                                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Student Audited Result (Active Generation)
+                                    </span>
+                                    <span class="text-[10px] text-slate-500 font-mono">optimized_code.sql</span>
+                                </div>
+                                <div class="p-4 flex-1 font-mono text-xs text-slate-500 overflow-auto bg-slate-950/40 custom-scrollbar transition-all" id="code-clean-container">
+                                    <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-slate-400 select-none" id="audit-mask">
+                                        <i data-lucide="lock" class="w-6 h-6 mb-2 text-indigo-400 animate-pulse"></i>
+                                        <span class="text-xs font-medium">Run active audit to generate verified codebase</span>
+                                    </div>
+                                    <pre class="m-0 hidden text-emerald-300" id="clean-content"></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Theory explanation box -->
+                        <div id="audit-discussion" class="bg-indigo-950/20 border border-indigo-500/20 p-5 rounded-2xl space-y-2 hidden">
+                            <h4 class="font-bold text-sm text-indigo-400 flex items-center gap-2">
+                                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                                Active Generation Effect & Cognitive Impact
+                            </h4>
+                            <p class="text-xs text-indigo-300/80 leading-relaxed" id="discussion-text">
+                                Select and run an active audit to see how the pedagogical framework preserves desirable difficulties.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- TAB 3: AGILE ROLE SIMULATOR -->
+            <section id="tab-sprint" class="tab-content hidden space-y-6 animate-fade-in">
+                <!-- Concept Card -->
+                <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <h2 class="font-bold text-base flex items-center gap-2">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-indigo-400"></i>
+                        Agile Scrum Simulation Game: Multi-Role Sprint Sandbox
+                    </h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Rather than letting team tasks deteriorate into unstructured communication, the pedagogical simulation distributes specialized tasks across roles, utilizing the AI as a localized node.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Column 1: Roles config -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col h-[400px]">
+                        <h3 class="font-bold text-sm text-slate-300 mb-3 flex items-center gap-2">
+                            <i data-lucide="user-square-2" class="w-4 h-4 text-indigo-400"></i>
+                            Select Active Professional Role
+                        </h3>
+                        <div class="space-y-2 overflow-y-auto flex-1 pr-1 custom-scrollbar">
+                            <div onclick="selectRole('TechLead')" id="role-box-TechLead" class="role-box cursor-pointer p-3.5 rounded-xl border border-indigo-500/20 bg-indigo-600/10 text-indigo-400 text-xs flex justify-between items-center transition-all">
+                                <div>
+                                    <p class="font-semibold">DevOps / Tech Lead</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Automated workflows & pipelines</p>
+                                </div>
+                                <i data-lucide="check" class="role-check-icon w-4 h-4 text-indigo-400"></i>
+                            </div>
+                            <div onclick="selectRole('QA')" id="role-box-QA" class="role-box cursor-pointer p-3.5 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-300 text-xs flex justify-between items-center transition-all hover:bg-slate-900">
+                                <div>
+                                    <p class="font-semibold">QA Engineer</p>
+                                    <p class="text-[10px] text-slate-500 mt-0.5">Test coverage & error handling</p>
+                                </div>
+                                <i data-lucide="check" class="role-check-icon w-4 h-4 text-transparent"></i>
+                            </div>
+                            <div onclick="selectRole('Architect')" id="role-box-Architect" class="role-box cursor-pointer p-3.5 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-300 text-xs flex justify-between items-center transition-all hover:bg-slate-900">
+                                <div>
+                                    <p class="font-semibold">Software Architect</p>
+                                    <p class="text-[10px] text-slate-500 mt-0.5">Relational models & Clean Code</p>
+                                </div>
+                                <i data-lucide="check" class="role-check-icon w-4 h-4 text-transparent"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Prompt and load distributions -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col h-[400px]">
+                        <h3 class="font-bold text-sm text-slate-300 mb-3 flex items-center gap-2">
+                            <i data-lucide="message-square" class="w-4 h-4 text-indigo-400"></i>
+                            AI Role Prompt Assignment
+                        </h3>
+                        <pre class="flex-1 bg-slate-900/60 rounded-xl p-4 font-mono text-[11px] text-slate-400 leading-normal overflow-auto custom-scrollbar" id="sprint-prompt"></pre>
+                    </div>
+
+                    <!-- Column 3: Live Run Sprint -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 flex flex-col h-[400px] justify-between">
+                        <div>
+                            <h3 class="font-bold text-sm text-slate-300 mb-3 flex items-center gap-2">
+                                <i data-lucide="play" class="w-4 h-4 text-indigo-400"></i>
+                                Execute Virtual Time Sprint
+                            </h3>
+                            <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                                Trigger role-based requirements and watch the role isolation metric calculate velocity increments instantly.
+                            </p>
+                            <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 text-xs space-y-2">
+                                <p class="text-slate-500 font-bold uppercase tracking-widest text-[9px]">Live Logger Output</p>
+                                <div id="sprint-log" class="text-slate-300 h-28 overflow-y-auto space-y-1 custom-scrollbar">
+                                    <p class="text-slate-500">System idle. Press run sprint to initiate sprint simulation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800/80">
+                            <button onclick="runSprint()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-indigo-950/20">
+                                Run Virtual Sprint Game
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- TAB 4: ERGONOMICS PARADOX -->
+            <section id="tab-paradox" class="tab-content hidden space-y-6 animate-fade-in">
+                <!-- Explanation panel -->
+                <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-3">
+                    <h2 class="font-bold text-base flex items-center gap-2">
+                        <i data-lucide="brain-circuit" class="w-5 h-5 text-indigo-400"></i>
+                        The Multi-Dimensional Mobile Learning Paradox (Figure 5 Explained)
+                    </h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        A visualization of Stephen Krashen's Affective Filter Hypothesis balancing John Sweller's Cognitive Load Theory. Mobile viewports act as terrible IDE implementations but powerful low-stakes cognitive sandboxes.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Physical ext cognitive load (Panel A) -->
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                            Panel A: Mobile Interface Ergonomic Friction (Extraneous Cognitive Load)
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-normal">
+                            Severe extraneous cognitive load and physical strain as logged by students attempting system modeling workflows on small touchscreen formats.
+                        </p>
+                        
+                        <!-- Dynamic Slider Calculator for CLT -->
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-300">Continuous Zoom & Panning Tasks</span>
+                                <span id="clt-friction-display" class="text-rose-400 font-bold text-xs">High Friction</span>
+                            </div>
+                            <input type="range" min="1" max="100" value="85" oninput="calculateClt(this.value)" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+                            <div class="flex justify-between text-[10px] text-slate-500">
+                                <span>Portable IPS (ViewSonic)</span>
+                                <span>Smartphone</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 pt-2">
+                            <div>
+                                <div class="flex justify-between text-xs font-semibold mb-1">
+                                    <span class="text-slate-300">Reading Complex Prompts & Schema Architecture</span>
+                                    <span class="text-rose-400" id="read-friction-score">Median 2.0 / 5.0</span>
+                                </div>
+                                <div class="w-full bg-slate-900 rounded-full h-3">
+                                    <div class="bg-rose-500 h-3 rounded-full transition-all duration-300" id="read-friction-bar" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-semibold mb-1">
+                                    <span class="text-slate-300">Active Coding on Virtual Mobile Keyboard</span>
+                                    <span class="text-rose-400" id="type-friction-score">Median 1.5 / 5.0</span>
+                                </div>
+                                <div class="w-full bg-slate-900 rounded-full h-3">
+                                    <div class="bg-rose-600 h-3 rounded-full transition-all duration-300" id="type-friction-bar" style="width: 30%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emotional comfort (Panel B) -->
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-sm text-slate-200 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Panel B: Affective Filter Lowering Effect (Safety Sandbox Model)
+                        </h3>
+                        <p class="text-xs text-slate-400 leading-normal">
+                            Reduced evaluation anxiety and psychological safety achieved during private, non-judgmental interactions with virtual generative tutor systems.
+                        </p>
+                        
+                        <!-- Visual representation of lower anxiety distribution -->
+                        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-center">
+                            <svg class="w-full h-32" viewBox="0 0 300 100">
+                                <!-- Smooth Curve representation (KDE of Psychological Safety) -->
+                                <path d="M 10 90 Q 50 90 100 80 T 180 50 T 240 10 T 290 10" fill="none" stroke="#10b981" stroke-width="3" />
+                                <path d="M 10 90 Q 50 90 100 80 T 180 50 T 240 10 T 290 10 L 290 90 L 10 90 Z" fill="rgba(16, 185, 129, 0.1)" />
+                                <text x="210" y="30" fill="#10b981" font-size="10" font-weight="bold">Density Peak at 4.28</text>
+                                <line x1="240" y1="10" x2="240" y2="90" stroke="#10b981" stroke-dasharray="2" />
+                            </svg>
+                        </div>
+
+                        <div class="p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10 text-xs text-emerald-300 leading-normal">
+                            <p class="font-semibold flex items-center gap-1.5 mb-1">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i> Stephen Krashen's hypothesis
+                            </p>
+                            By interacting privately with an AI tutor on a smartphone, students can make mistakes and ask conceptual questions without fear of evaluation by peers or professors. This lowers the affective filter.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Interactive Guide Modal -->
+    <div id="guide-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden animate-fade-in">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+                <div class="flex items-center space-x-2 text-indigo-400">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                    <h3 class="font-bold text-lg text-slate-100">User Guidelines & Evaluation Manual</h3>
+                </div>
+                <button onclick="toggleModal('guide-modal')" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 custom-scrollbar text-sm text-slate-300 leading-relaxed">
+                <p class="text-xs text-slate-400">
+                    Welcome to the interactive verification platform. Follow these step-by-step instructions to experience how the curriculum counters cognitive offloading and leverages psychological safety.
+                </p>
+                
+                <!-- Section 1 -->
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-200 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-mono font-bold">1</span>
+                        Verify Empirical Metrics (Overview Tab)
+                    </h4>
+                    <p class="text-xs text-slate-400 pl-7">
+                        Analyze the interactive SVG charts in the <strong>Empirical Overview</strong>. These charts plot real quantitative metrics from our N=299 study—such as the 12.8% active refactoring rate and 76.2% accountability improvement.
+                    </p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-200 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-mono font-bold">2</span>
+                        Run Active Auditing (Auditor Tab)
+                    </h4>
+                    <p class="text-xs text-slate-400 pl-7">
+                        Go to the <strong>AI Auditing Auditor</strong> tab. Select a database anomaly from the left panel (e.g., O(N²) Loop, Mutating Tables, or Race Conditions). Click <strong>"Execute Active Audit"</strong> to simulate how students identify and refactor automated bugs, preserving "desirable difficulties".
+                    </p>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-200 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-mono font-bold">3</span>
+                        Run Agile Simulations (Simulator Tab)
+                    </h4>
+                    <p class="text-xs text-slate-400 pl-7">
+                        Switch to <strong>Sprint Role Simulator</strong>. Choose a student's assigned Agile role (Tech Lead, QA, or Architect) to see how functional boundaries reduce communication overhead. Press <strong>"Run Virtual Sprint Game"</strong> to watch real-time Scrum sprint metrics calculate dynamically.
+                    </p>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-200 flex items-center gap-2">
+                        <span class="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-mono font-bold">4</span>
+                        Modulate Human-AI Dynamics (Sliders)
+                    </h4>
+                    <p class="text-xs text-slate-400 pl-7">
+                        Adjust the <strong>Sycophancy Slider</strong> on the sidebar to see how flattery manipulates student trust. Navigate to the <strong>Ergonomics Paradox</strong> tab and adjust the <strong>CLT Slider</strong> to see the exact trade-offs between physical constraints (Sweller's CLT) and psychological safe zones (Krashen's Affective Filter).
+                    </p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-800 bg-slate-950/30 flex justify-end">
+                <button onclick="toggleModal('guide-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold transition-colors">
+                    Got it, Let's Explore!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Block -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Switch panel tabs
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-slate-400 hover:bg-slate-900 hover:text-white";
+            });
+
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.className = "tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all bg-indigo-600/10 text-indigo-400 border border-indigo-500/10";
+        }
+
+        // Trust Modulator Logic
+        function updateTrustSlider(val) {
+            document.getElementById('trust-percentage').textContent = val + "%";
+            const commentary = document.getElementById('sycophancy-commentary');
+            if (val > 80) {
+                commentary.textContent = "Over-trust condition! The AI's demeanor-based flattery has successfully bypassed critical auditing pathways, inducing passive copying.";
+                commentary.className = "text-[10px] text-rose-400 leading-normal font-medium";
+            } else if (val < 30) {
+                commentary.textContent = "High skepticism mode. Critical verifying is enabled. Students trace database logic manually to spot security and complex performance failures.";
+                commentary.className = "text-[10px] text-emerald-400 leading-normal font-medium";
+            } else {
+                commentary.textContent = "Calibrated trust level. The ideal state where AI accelerates boilerplate writing while humans remain the architectural verification heads.";
+                commentary.className = "text-[10px] text-slate-400 leading-normal";
+            }
+        }
+
+        // CLT Interactive Calculator
+        function calculateClt(sliderVal) {
+            const frictionDisplay = document.getElementById('clt-friction-display');
+            const readScore = document.getElementById('read-friction-score');
+            const typeScore = document.getElementById('type-friction-score');
+            const readBar = document.getElementById('read-friction-bar');
+            const typeBar = document.getElementById('type-friction-bar');
+
+            // Map slider value (1 = ViewSonic Portable Display, 100 = Phone Screen)
+            if (sliderVal < 30) {
+                frictionDisplay.textContent = "Minimal Extraneous Load";
+                frictionDisplay.className = "text-emerald-400 font-bold text-xs";
+                readScore.textContent = "Median 4.5 / 5.0 (Optimal Reading Viewport)";
+                typeScore.textContent = "Median 4.2 / 5.0 (Full QWERTY Desktop Keyboard)";
+                readBar.style.width = "90%";
+                typeBar.style.width = "84%";
+            } else if (sliderVal < 70) {
+                frictionDisplay.textContent = "Moderate Interface Friction";
+                frictionDisplay.className = "text-amber-400 font-bold text-xs";
+                readScore.textContent = "Median 3.2 / 5.0 (Tablet/Horizontal Mobile Layout)";
+                typeScore.textContent = "Median 2.8 / 5.0 (Medium Screen Keyboard)";
+                readBar.style.width = "64%";
+                typeBar.style.width = "56%";
+            } else {
+                frictionDisplay.textContent = "Severe Extraneous Load (Phone)";
+                frictionDisplay.className = "text-rose-400 font-bold text-xs";
+                readScore.textContent = "Median 2.0 / 5.0 (Small viewport visual fatigue)";
+                typeScore.textContent = "Median 1.5 / 5.0 (Touch typing ergonomic barrier)";
+                readBar.style.width = "40%";
+                typeBar.style.width = "30%";
+            }
+        }
+
+        // AI Auditor Data Bank
+        const bugsData = {
+            1: {
+                dirty: `-- Inefficient O(N²) Nested Loop generated by LLM\nSELECT account_id, balance \nFROM accounts a1\nWHERE balance = (\n    SELECT MAX(balance) \n    FROM accounts a2 \n    WHERE a1.branch_id = a2.branch_id\n);\n-- Note: Causes continuous full table scans per record.`,
+                clean: `-- Optimized O(N) Window Function refactoring\nWITH RankedAccounts AS (\n    SELECT \n        account_id, \n        balance,\n        RANK() OVER(PARTITION BY branch_id ORDER BY balance DESC) as balance_rank\n    FROM accounts\n)\nSELECT account_id, balance \nFROM RankedAccounts\nWHERE balance_rank = 1;\n-- Note: Runs index search via single heap partition pass.`,
+                discussion: "This audit demonstrates Robert Bjork's 'Desirable Difficulties' in practice. Rather than executing a slow, copy-pasted subquery, students manually refactored the query to use an O(N) window ranking function. This active generation step reinforces their database query planning skills."
+            },
+            2: {
+                dirty: `-- Oracle Mutating Table anomaly generated by LLM trigger\nCREATE OR REPLACE TRIGGER update_salary_trigger\nAFTER UPDATE ON employees\nFOR EACH ROW\nBEGIN\n    -- ORA-04091: Table is mutating, trigger cannot query it\n    SELECT AVG(salary) INTO :new.salary_limit FROM employees;\nEND;`,
+                clean: `-- Reconstructed Transaction / Stored Procedure strategy\n-- Resolved by replacing row-level mutation with Stored Procedures \n-- or Compound Triggers that separate rows from global states.\nCREATE OR REPLACE TRIGGER update_salary_trigger\nFOR UPDATE OF salary ON employees\nCOMPOUND TRIGGER\n    -- Compound trigger isolates state mutations from single row loops\n    ...`,
+                discussion: "Students verified a mutating table error in Oracle SQL (ORA-04091). Resolving this issue required replacing raw trigger execution with Stored Procedures or Compound Triggers, illustrating that auditing prompts encourages students to study low-level database constraints."
+            },
+            3: {
+                dirty: `-- Unsafe concurrent transaction structure\nCREATE PROCEDURE TransferMoney(\n    p_from INT, p_to INT, p_amount DECIMAL\n) AS \nBEGIN\n    -- Vulnerable to race conditions\n    UPDATE accounts SET balance = balance - p_amount WHERE id = p_from;\n    UPDATE accounts SET balance = balance + p_amount WHERE id = p_to;\nEND;`,
+                clean: `-- Safe transaction block with critical locks\nCREATE PROCEDURE TransferMoney(\n    p_from INT, p_to INT, p_amount DECIMAL(18,2)\n) AS \nBEGIN\n    BEGIN TRANSACTION;\n    -- Implemented critical FOR UPDATE isolation\n    SELECT balance FROM accounts WITH (XLOCK, ROWLOCK) WHERE id = p_from;\n    -- Followed by atomic rollback evaluations...\n    COMMIT TRANSACTION;\nEND;`,
+                discussion: "LLMs frequently omit safety procedures such as FOR UPDATE locks, creating data vulnerabilities. Active auditing forced the student cohort to implement proper locking constraints, demonstrating system design autonomy."
+            }
+        };
+
+        // Load Selected Bug
+        let currentBug = 1;
+        function loadBug(bugId) {
+            currentBug = bugId;
+            document.querySelectorAll('.bug-btn').forEach((btn, idx) => {
+                const id = idx + 1;
+                const targetBtn = document.getElementById(`bug-btn-${id}`);
+                if (id === bugId) {
+                    targetBtn.className = "bug-btn w-full text-left p-3.5 rounded-xl border text-xs font-medium transition-all bg-indigo-600/10 border-indigo-500/20 text-indigo-400";
+                } else {
+                    targetBtn.className = "bug-btn w-full text-left p-3.5 rounded-xl border text-xs font-medium transition-all bg-slate-900 border-slate-800 hover:bg-slate-900/60 text-slate-300";
+                }
+            });
+
+            document.getElementById('code-dirty').textContent = bugsData[bugId].dirty;
+            document.getElementById('clean-content').textContent = '';
+            document.getElementById('audit-mask').classList.remove('hidden');
+            document.getElementById('audit-discussion').classList.add('hidden');
+        }
+
+        // Execute Audit Code
+        function auditCode() {
+            document.getElementById('audit-mask').classList.add('hidden');
+            const cleanBlock = document.getElementById('clean-content');
+            cleanBlock.classList.remove('hidden');
+            cleanBlock.textContent = bugsData[currentBug].clean;
+            
+            document.getElementById('audit-discussion').classList.remove('hidden');
+            document.getElementById('discussion-text').textContent = bugsData[currentBug].discussion;
+        }
+
+        // Roles Prompt Bank
+        const rolePrompts = {
+            TechLead: `// Tech Lead AI Assistant System Prompt\n{\n  "role": "Agile DevOps/Tech Lead",\n  "objective": "Design system configuration templates and pipeline templates.",\n  "system_bias": "Enforce strict multi-level checking on all PR commits.",\n  "distributed_cognition_load": "High process control, minimal syntax typing."\n}`,
+            QA: `// QA Engineer AI Assistant System Prompt\n{\n  "role": "QA Quality Engineer",\n  "objective": "Build automated unit-testing pipelines.",\n  "test_mode": "Automate boundary conditions and error injection scripts.",\n  "affective_filter": "Zero failure penalties, low evaluation stress."\n}`,
+            Architect: `// Software Architect AI Assistant System Prompt\n{\n  "role": "Lead Software Architect",\n  "objective": "Create modular system layouts.",\n  "standards": "Enforce separation of concerns and pattern conformity.",\n  "generation_focus": "High-level database and sequence diagram planning."\n}`
+        };
+
+        // Select Role in Simulator
+        function selectRole(roleId) {
+            document.querySelectorAll('.role-box').forEach(box => {
+                box.className = "role-box cursor-pointer p-3.5 rounded-xl border border-slate-800 bg-slate-900/60 text-slate-300 text-xs flex justify-between items-center transition-all hover:bg-slate-900";
+                const icon = box.querySelector('.role-check-icon');
+                if (icon) {
+                    icon.setAttribute('class', 'role-check-icon w-4 h-4 text-transparent');
+                }
+            });
+
+            const activeBox = document.getElementById(`role-box-${roleId}`);
+            if (activeBox) {
+                activeBox.className = "role-box cursor-pointer p-3.5 rounded-xl border border-indigo-500/20 bg-indigo-600/10 text-indigo-400 text-xs flex justify-between items-center transition-all";
+                const activeIcon = activeBox.querySelector('.role-check-icon');
+                if (activeIcon) {
+                    activeIcon.setAttribute('class', 'role-check-icon w-4 h-4 text-indigo-400');
+                }
+            }
+
+            if (rolePrompts[roleId]) {
+                document.getElementById('sprint-prompt').textContent = rolePrompts[roleId];
+            }
+        }
+
+        // Run Agile Sprint Sim
+        function runSprint() {
+            const logger = document.getElementById('sprint-log');
+            logger.innerHTML = "";
+            
+            const logs = [
+                "🚀 Sprint initialization triggered...",
+                "📦 Parsing forklift positioning case-study schema...",
+                "🤖 Resolving distributed role dependencies...",
+                "📊 Metric computed: Sprint Velocity accelerated to 3.83/5.0!",
+                "✅ Release burndown generated. No roadblocks identified."
+            ];
+
+            let delay = 0;
+            logs.forEach(msg => {
+                setTimeout(() => {
+                    const p = document.createElement('p');
+                    p.className = "text-slate-300 animate-fade-in";
+                    p.textContent = msg;
+                    logger.appendChild(p);
+                    logger.scrollTop = logger.scrollHeight;
+                }, delay);
+                delay += 600;
+            });
+        }
+
+        // Toggle Modal Guide
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Load defaults
+        loadBug(1);
+        selectRole('TechLead');
+    </script>
+</body>
+</html>
